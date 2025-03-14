@@ -11,7 +11,7 @@ class TextService
         $result = $text;
 
         foreach ($operations as $operation) {
-            switch(strtolower($operation)) {
+            switch($operation) {
                 case 'reverse':
                     $result = $this->reverse($result);
                     break;

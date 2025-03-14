@@ -51,7 +51,7 @@ Content-Type: application/json
 ```json
 {
     "original_text": "Hello World",
-    "processed_text": "DLROW OLLEH"
+    "processed_text": "DLROWOLLEH"
 }
 ```
 
@@ -59,35 +59,61 @@ Content-Type: application/json
 
 ##  錯誤處理
 
+
 ### ➤ 1. 驗證失敗（422 Unprocessable Entity）
-![Postman 測試結果](images/validationFailed.PNG)
+當 `text` 或 `operations` 欄位缺失、格式錯誤，或 `operations` 包含無效操作時，會回傳此錯誤。
+
+
+`operations`  欄位缺失：  
+![驗證失敗](images/fieldMissing.PNG)
 ```json
 {
     "error": "Validation failed",
-    "messages": "The operations field is required."
+    "messages": {
+        "operations": [
+            "The operations field is required."
+        ]
+    }
 }
 ```
-- 當 `text` 或 `operations` 缺失、格式錯誤，會出現此錯誤。
 
-### ➤ 2. 無效操作（400 Bad Request）
-![Postman 測試結果](images/invalidOperation.PNG)
+`operations` 包含無效操作：  
+![驗證失敗](images/invalidOperation.PNG)
+
 ```json
 {
-    "error": "Invalid operation",
-    "messages": "Unknown operation: foobar"
+    "error": "Validation failed",
+    "messages": {
+        "operations.0": [
+            "The selected operations.0 is invalid."
+        ]
+    }
 }
 ```
-- 若 `operations` 中有不支援的操作指令，將回傳此錯誤
-### ➤ 3. 系統錯誤（500 Internal Server Error）
+
+ 驗證規則說明：  
+- `text` 欄位必填，必須為字串  
+- `operations` 必須是陣列  
+- `operations.*` 必須是 `reverse`、`uppercase`、`lowercase`、`remove_spaces` 其中之一  
+- 任一條件未符合 ➜ 422 錯誤
+
+---
+
+### ➤ 2. 系統錯誤（500 Internal Server Error）
+伺服器發生不可預期錯誤時，回傳 500 錯誤。
+
+
 ```json
 {
     "error": "Server Error",
     "messages": "Something went wrong"
 }
 ```
-- 伺服器發生不可預期錯誤
-- 可查看 logs 了解錯誤原因
----
+
+ 通常原因  
+- 非預期例外（Exception）  
+- 可以查看 `storage/logs/laravel.log` 取得詳細錯誤資訊  
+
 
 ##  專案架構
 ```
@@ -105,7 +131,7 @@ routes/
 |--------------------|--------------------|
 | **text 太長**       | 驗證規則加 `max:10000`限制最大長度 10,000 字元，超過時驗證失敗 |
 | **operations 重複指令** | 使用`array_unique`去掉重複 |
-| **無效操作指令**     | 回傳 400 錯誤，並列出未知操作名稱 |
+| **無效操作指令**     | 回傳 422 錯誤 |
 | **特殊字元 / emoji** | 修改reverse方法 |
 | **操作順序影響**     | 操作會依照傳入 `operations` 的順序依序處理 |
 

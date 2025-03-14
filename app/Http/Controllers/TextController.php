@@ -6,6 +6,7 @@ use App\Services\TextService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class TextController extends Controller
 {
@@ -20,7 +21,8 @@ class TextController extends Controller
         try{
             $validated = $request->validate([
                 'text' => 'required|string',
-                'operations' => 'required|array'
+                'operations' => 'required|array',
+                'operations.*' => 'required|string|in:reverse,uppercase,lowercase,remove_spaces'
             ]);
 
             $originalText = $validated['text'];
@@ -32,19 +34,13 @@ class TextController extends Controller
                 'original_text' => $originalText,
                 'processed_text' => $processedText
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             return response()->json([
                 'error' => 'Validation failed',
-                'messages' => $e->getMessage()
+                'messages' => $e->errors()
             ], 422);
 
-        } catch (\InvalidArgumentException $e) {
-            return response()->json([
-                'error' => 'Invalid operation',
-                'messages' => $e->getMessage()
-            ], 400);
-            
-        } catch (Exception $e) {
+        }  catch (Exception $e) {
             Log::error('Text Processing Error: ' . $e->getMessage());
 
             return response()->json([
