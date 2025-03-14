@@ -47,7 +47,7 @@ Content-Type: application/json
 ---
 
 #### 🔸 Response 成功範例（200 OK）
-![Postman 測試結果](images/apiSuccess.png)
+![Postman 測試結果](images/apiSuccess.PNG)
 ```json
 {
     "original_text": "Hello World",
@@ -60,7 +60,7 @@ Content-Type: application/json
 ##  錯誤處理
 
 ### ➤ 1. 驗證失敗（422 Unprocessable Entity）
-![Postman 測試結果](images/validationFailed.png)
+![Postman 測試結果](images/validationFailed.PNG)
 ```json
 {
     "error": "Validation failed",
@@ -70,7 +70,7 @@ Content-Type: application/json
 - 當 `text` 或 `operations` 缺失、格式錯誤，會出現此錯誤。
 
 ### ➤ 2. 無效操作（400 Bad Request）
-![Postman 測試結果](images/invalidOperation.png)
+![Postman 測試結果](images/invalidOperation.PNG)
 ```json
 {
     "error": "Invalid operation",
