@@ -134,7 +134,27 @@ routes/
 | **無效操作指令**     | 回傳 422 錯誤 |
 | **特殊字元 / emoji** | 修改reverse方法 |
 | **操作順序影響**     | 操作會依照傳入 `operations` 的順序依序處理 |
+---
+##  測試說明
 
+專案包含 **Feature Test** 與 **Unit Test**，確保 API 與業務邏輯的正確性與穩定性。
+
+
+
+###  Feature Test（功能測試）
+
+### 測試目標
+驗證 RESTful API `/api/text/process` 是否依據傳入 `operations` 正確處理文字。
+
+### 測試報告截圖
+![Feature 測試成功](images/FeatureTest.PNG)
+###  Unit Test（單元測試）
+
+### 測試目標
+測試 `TextService` 業務邏輯，確保每個操作功能正常。
+
+### 測試報告截圖
+![Unit 測試成功](images/UnitTest.PNG)
 
 ---
 ##  應對未來操作增多的擴展性設計

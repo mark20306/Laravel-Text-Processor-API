@@ -37,7 +37,7 @@ class TextController extends Controller
         } catch (ValidationException $e) {
             return response()->json([
                 'error' => 'Validation failed',
-                'messages' => $e->errors()
+                'errors' => $e->errors()
             ], 422);
 
         }  catch (Exception $e) {
@@ -45,7 +45,7 @@ class TextController extends Controller
 
             return response()->json([
                 'error' => 'Server Error',
-                'messages' => 'Something went wrong'
+                'errors' => 'Something went wrong'
             ], 500);
         }
         
